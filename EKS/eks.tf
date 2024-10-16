@@ -1,3 +1,7 @@
+provider "aws" {
+    region = "us-east-2"
+}
+
 # cluster resource
 resource "aws_eks_cluster" "eks-cluster" {
     name = "my-eks-cluster-001"
