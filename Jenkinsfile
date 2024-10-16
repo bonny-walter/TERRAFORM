@@ -13,8 +13,8 @@ pipeline {
         stage('Test AWS Credentials') {
                 steps {
                     withCredentials([
-                        string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'aws-access-key-id'),
-                        string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'aws-secret-access-key')
+                        string(credentialsId: 'aws-access-key-id', variable: 'aws-access-key-id'),
+                        string(credentialsId: 'aws-secret-access-key', variable: 'aws-secret-access-key')
                     ]) {
                         sh '''
                             aws sts get-caller-identity
@@ -26,8 +26,8 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 withCredentials([
-                    string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'aws-access-key-id'),
-                    string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'aws-secret-access-key')
+                    string(credentialsId: 'aws-access-key-id', variable: 'aws-access-key-id'),
+                    string(credentialsId: 'aws-secret-access-key', variable: 'aws-secret-access-key')
                 ]) {
                     sh '''
                         cd EKS
@@ -39,8 +39,8 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 withCredentials([
-                    string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'aws-access-key-id'),
-                    string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'aws-secret-access-key')
+                    string(credentialsId: 'aws-access-key-id', variable: 'aws-access-key-id'),
+                    string(credentialsId: 'aws-secret-access-key', variable: 'aws-secret-access-key')
                 ]) {
                     sh '''
                         cd EKS
@@ -61,8 +61,8 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 withCredentials([
-                    string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'aws-access-key-id'),
-                    string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'aws-secret-access-key')
+                    string(credentialsId: 'aws-access-key-id', variable: 'aws-access-key-id'),
+                    string(credentialsId: 'aws-secret-access-key', variable: 'aws-secret-access-key')
                 ]) {
                     sh '''
                         cd EKS
