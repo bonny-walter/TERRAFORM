@@ -1,8 +1,7 @@
 pipeline {
     agent any
     environment {
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        AWS_DEFAULT_REGION = 'us-east-2'  // Set your default AWS region
     }
     stages {
         stage('Checkout') {
@@ -12,18 +11,32 @@ pipeline {
         }
         stage('Terraform Init') {
             steps {
-                sh 'cd EKS && terraform init'
+                withCredentials([
+                    string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')
+                ]) {
+                    sh '''
+                        cd EKS
+                        terraform init
+                    '''
+                }
             }
         }
         stage('Terraform Plan') {
             steps {
-                sh 'cd EKS && terraform plan -out=tfplan'
+                withCredentials([
+                    string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')
+                ]) {
+                    sh '''
+                        cd EKS
+                        terraform plan -out=tfplan
+                    '''
+                }
             }
         }
         stage('Approval') {
             steps {
-
-                 
                 // Send a Slack notification that the pipeline is waiting for approval
                 slackSend channel: '#deployments', message: 'Waiting for approval to deploy to production. Please review the Terraform plan and approve in Jenkins.'
 
@@ -33,7 +46,15 @@ pipeline {
         }
         stage('Terraform Apply') {
             steps {
-                sh 'cd production && terraform apply "tfplan"'
+                withCredentials([
+                    string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')
+                ]) {
+                    sh '''
+                        cd EKS
+                        terraform apply "tfplan"
+                    '''
+                }
             }
         }
     }
