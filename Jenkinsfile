@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'dev', url: 'https://github.com/bonny-walter/TERRAFORM.git'
+                git branch: 'dev', url: 'git@github.com:bonny-walter/TERRAFORM.git'
             }
         }
         stage('Terraform Init') {
