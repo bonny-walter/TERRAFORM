@@ -9,20 +9,6 @@ pipeline {
                 git branch: 'dev', url: 'https://github.com/bonny-walter/TERRAFORM.git'
             }
         }
-
-        stage('Test AWS Credentials') {
-                steps {
-                    withCredentials([
-                        string(credentialsId: 'aws-access-key-id', variable: 'aws-access-key-id'),
-                        string(credentialsId: 'aws-secret-access-key', variable: 'aws-secret-access-key')
-                    ]) {
-                        sh '''
-                            aws sts get-caller-identity
-                        '''
-                    }
-                }
-            }
-
         stage('Terraform Init') {
             steps {
                 withCredentials([
@@ -51,11 +37,7 @@ pipeline {
         }
         stage('Approval') {
             steps {
-                // Send a Slack notification that the pipeline is waiting for approval
-                slackSend channel: '#deployments', message: 'Waiting for approval to deploy to production. Please review the Terraform plan and approve in Jenkins.'
-
-                // Pause for manual approval in Jenkins
-                input message: 'Approve deployment to production?', ok: 'Deploy'
+                input message: 'Approve deployment to EKS?', ok: 'Deploy'
             }
         }
         stage('Terraform Apply') {
@@ -73,4 +55,3 @@ pipeline {
         }
     }
 }
-
