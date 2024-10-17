@@ -29,6 +29,8 @@ pipeline {
                     string(credentialsId: 'aws-secret-access-key', variable: 'aws-secret-access-key')
                 ]) {
                     sh '''
+                        export AWS_ACCESS_KEY_ID=$aws-access-key-id
+                        export AWS_SECRET_ACCESS_KEY=$aws-secret-access-key
                         cd EKS
                         terraform plan -out=tfplan
                     '''
