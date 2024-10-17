@@ -4,6 +4,13 @@ pipeline {
         AWS_DEFAULT_REGION = 'us-east-2' // Set your default AWS region
     }
     stages {
+
+        stage('Cleanup') {
+            steps {
+                cleanWs()
+            }
+        }
+
         stage('Checkout') {
             steps {
                 git branch: 'dev', url: 'git@github.com:bonny-walter/TERRAFORM.git'
