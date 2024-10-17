@@ -13,7 +13,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'git-jenkins-private-key', usernameVariable: 'bonny-walter')]) {
+                withCredentials([usernamePassword(credentialsId: 'github-cred', usernameVariable: 'bonny-walter')]) {
                     sh '''
                         
                         git clone https://github.com/bonny-walter/TERRAFORM.git
