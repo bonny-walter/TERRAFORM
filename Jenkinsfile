@@ -27,13 +27,17 @@ pipeline {
 
         stage('Terraform init') {
             steps {
-                sh 'terraform init'
+
+                sh ' cd EKS && terraform init'
             }
         }
         stage('Plan') {
             steps {
-                sh 'terraform plan -out tfplan'
-                sh 'terraform show -no-color tfplan > tfplan.txt'
+                sh '''
+                    cd EKS
+                    terraform plan -out tfplan'
+                    sterraform show -no-color tfplan > tfplan.txt'
+                   ''' 
             }
         }
 
