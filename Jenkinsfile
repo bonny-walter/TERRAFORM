@@ -1,13 +1,12 @@
 pipeline {
     agent any
-    
 
     environment {
         AWS_DEFAULT_REGION = 'us-east-2' // Set your default AWS region
-        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID ')
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-
     }
+
     stages {
 
         stage('Cleanup') {
@@ -18,39 +17,33 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                
-                    
-                        
-                    sh 'git clone https://github.com/bonny-walter/TERRAFORM.git'
-                    
-                
+                sh 'git clone https://github.com/bonny-walter/TERRAFORM.git'
             }
         }
 
         stage('Terraform init') {
             steps {
-
-                sh ' cd TERRAFORM/EKS && terraform init'
+                sh 'cd TERRAFORM/EKS && terraform init'
             }
         }
+
         stage('Plan') { 
             steps {
                 sh '''
                     cd TERRAFORM/EKS
-                    terraform plan -out tfplan'
-                    sterraform show -no-color tfplan > tfplan.txt'
+                    terraform plan -out=tfplan
+                    terraform show -no-color tfplan > tfplan.txt
                    ''' 
             }
         }
 
-
-        stage('Approval') {
+        stage('Approval to Deploy') {
             steps {
                 input message: 'Approve deployment to EKS?', ok: 'Deploy'
             }
         }
 
-        stage('apply') {
+        stage('Apply') {
             steps {
                 sh '''
                     cd TERRAFORM/EKS
@@ -58,12 +51,14 @@ pipeline {
                   '''  
             }
         }
-        stage('Approval') {
+
+        stage('Approval to Destroy') {
             steps {
-                input message: 'Approve deletion of  EKS?', ok: 'Deploy'
+                input message: 'Approve deletion of EKS?', ok: 'Destroy'
             }
         }
-        stage('destroy') {
+
+        stage('Destroy') {
             steps {
                 sh '''
                     cd TERRAFORM/EKS
@@ -71,12 +66,5 @@ pipeline {
                   '''
             }
         }
-
-        
-
-
-
-
-        
     }
 }
