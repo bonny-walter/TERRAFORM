@@ -1,9 +1,6 @@
 pipeline {
     agent any
-    parameters {
-        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
-        choice(name: 'action', choices: ['apply', 'destroy'], description: 'Select the action to perform')
-    }
+    
 
     environment {
         AWS_DEFAULT_REGION = 'us-east-2' // Set your default AWS region
